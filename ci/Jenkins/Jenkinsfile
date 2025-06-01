@@ -23,7 +23,7 @@ pipeline {
         stage('Code Analysis with SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh "mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
+                    sh "cd demo-java-app && mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
                 }
             }
         }

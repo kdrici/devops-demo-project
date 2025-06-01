@@ -6,9 +6,6 @@ pipeline {
         DOCKER_CREDS = credentials('dockerhub-creds')
     }
 
-    tools {
-        maven 'M3' // Assure-toi que Maven est défini dans Jenkins
-    }
 
     stages {
         stage('Checkout') {

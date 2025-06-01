@@ -6,14 +6,7 @@ pipeline {
         DOCKER_CREDS = credentials('dockerhub-creds')
     }
 
-
     stages {
-        stage('Checkout') {
-            steps {
-                git url: 'https://github.com/kdrici/devops-demo-project.git', credentialsId: 'github-token', branch: 'main'
-            }
-        }
-
         stage('Build with Maven') {
             steps {
                 sh 'cd demo-java-app && mvn clean package'
@@ -23,21 +16,19 @@ pipeline {
         stage('Code Analysis with SonarQube') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh "cd demo-java-app && mvn sonar:sonar -Dsonar.login=${SONAR_TOKEN}"
+                    sh 'cd demo-java-app && mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN'
                 }
             }
         }
 
         stage('Docker Build & Push') {
             steps {
-                script {
-                    sh """
-                        docker login -u ${DOCKER_CREDS_USR} -p ${DOCKER_CREDS_PSW}
-                        docker build -t kdrici/demo-java-app:latest .
-                        docker tag kdrici/demo-java-app:latest docker.io/kdrici/demo-java-app:latest
-                        docker push docker.io/kdrici/demo-java-app:latest
-                    """
-                }
+                sh '''
+                    docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW
+                    docker build -t kdrici/demo-java-app:latest .
+                    docker tag kdrici/demo-java-app:latest docker.io/kdrici/demo-java-app:latest
+                    docker push docker.io/kdrici/demo-java-app:latest
+                '''
             }
         }
     }

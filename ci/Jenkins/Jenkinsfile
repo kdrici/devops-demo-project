@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh '''
                     docker login -u $DOCKER_CREDS_USR -p $DOCKER_CREDS_PSW
-                    docker build -t kdrici/demo-java-app:latest .
+                    docker build -t kdrici/demo-java-app:latest -f ci/Jenkins/Dockerfile .
                     docker tag kdrici/demo-java-app:latest docker.io/kdrici/demo-java-app:latest
                     docker push docker.io/kdrici/demo-java-app:latest
                 '''
